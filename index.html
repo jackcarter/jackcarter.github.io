@@ -8,50 +8,44 @@
 
     <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
 
+    <script src="https://cdn.plot.ly/plotly-1.2.0.min.js"></script>
     <title>Jack Carter</title>
   </head>
 
   <body>
+<div id="myDiv" style="width:100%;height:100%;"></div>
+<script>
+function makeplot() {
+  Plotly.d3.csv("https://raw.githubusercontent.com/jackcarter/jackcarter.github.io/master/data/speedtest.csv", function(data){ processData(data) } );
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/jackcarter">View on GitHub</a>
+};
 
-          <h1 id="project_title">Jack Carter</h1>
-          <h2 id="project_tagline"></h2>
+function processData(allRows) {
 
-        </header>
-    </div>
+  var x = [], y = [];
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-jacks-page" class="anchor" href="#welcome-to-jacks-page"><span class="octicon octicon-link"></span></a>Welcome to Jack's page</h3>
+  for (var i=0; i<allRows.length; i++) {
+    row = allRows[i];
+    x.push( row['Datetime'] );
+    y.push( row['Download (Mbit/s)'] );
+  }
 
-<p>I might do something with this sometime.</p>
-      </section>
-    </div>
+  makePlotly( x, y);
+}
 
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
+function makePlotly( x, y ){
+  var traces = [{
+    x: x,
+    y: y,
+    mode: 'markers',
+    type: 'scatter'
+  }];
 
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-47243920-1");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-
-
-  </body>
+  Plotly.newPlot('myDiv', traces,
+    {title: 'Download speed (Mbit/s)', xaxis: {
+    range: [new Date().getTime() - 1000*60*60*24*14, new Date().getTime() + 1000*60*60*24]  // to set the xaxis range to 0 to 1
+  }});
+};
+  makeplot();
+</script>
 </html>
