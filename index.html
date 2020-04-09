@@ -20,31 +20,65 @@ function makeplot() {
 
 };
 
+function getDL(row) {
+  dl_raw = row['Download (Mbit/s)'];
+  if(dl_raw=='Fail') {
+    return '0.00';
+  } else {
+    return dl_raw;
+  }
+}
+
 function processData(allRows) {
 
-  var x = [], y = [];
+  var x = [], y = [], avg = [];
 
   for (var i=0; i<allRows.length; i++) {
     row = allRows[i];
     x.push( row['Datetime'] );
-    y.push( row['Download (Mbit/s)'] );
+    y.push( getDL(row) );
+    if(i>2 && i<allRows.length-3) {
+      iavg = (parseFloat(getDL(allRows[i-2])) + parseFloat(getDL(allRows[i-1])) + parseFloat(getDL(allRows[i])) + parseFloat(getDL(allRows[i+1])) + parseFloat(getDL(allRows[i+2])))/5.0;
+      avg.push(iavg);
+    } else { 
+      avg.push(NaN);
+    }
   }
-
-  makePlotly( x, y);
+  console.log(avg.length);
+  console.log(x.length);
+  console.log(y.length);
+  makePlotly(x, y, avg);
 }
 
-function makePlotly( x, y ){
+function makePlotly(x, y, avg){
   var traces = [{
     x: x,
     y: y,
     mode: 'markers',
-    type: 'scatter'
+    type: 'scatter',
+    name: 'Download (Mbit/s)',
+    marker: {
+              color: '#aaaaaa',
+              size: 2
+            }
+  }, {
+    x: x,
+    y: avg,
+    type: 'scatter',
+    name: 'Moving average',
+    marker: {
+              color: '#333333',
+            }
   }];
 
+  var layout = {};
+
   Plotly.newPlot('myDiv', traces,
-    {title: 'Download speed (Mbit/s)', xaxis: {
-    range: [new Date().getTime() - 1000*60*60*24*14, new Date().getTime() + 1000*60*60*24]  // to set the xaxis range to 0 to 1
-  }});
+    {title: 'Download speed (Mbit/s)', 
+    xaxis: {
+              range: [new Date().getTime() - 1000*60*60*24*14, new Date().getTime() + 1000*60*60*4] 
+            },
+    showlegend: false});
 };
   makeplot();
 </script>
