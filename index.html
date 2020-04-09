@@ -14,7 +14,12 @@
 
   <body>
 <div id="myDiv" style="width:100%;height:100%;"></div>
+<p id="para"></p>
 <script>
+function updatePara(last_y){
+  document.getElementById("para").innerHTML = "The last download speed was " + last_y + ". Terrible!";
+};
+
 function makeplot() {
   Plotly.d3.csv("https://raw.githubusercontent.com/jackcarter/jackcarter.github.io/master/data/speedtest.csv", function(data){ processData(data) } );
 
@@ -44,9 +49,7 @@ function processData(allRows) {
       avg.push(NaN);
     }
   }
-  console.log(avg.length);
-  console.log(x.length);
-  console.log(y.length);
+  updatePara(y[y.length-1])
   makePlotly(x, y, avg);
 }
 
