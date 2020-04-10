@@ -17,7 +17,17 @@
 <p id="para"></p>
 <script>
 function updatePara(last_y){
-  document.getElementById("para").innerHTML = "The last download speed was " + last_y + ". Terrible!";
+  var adj;
+  if(last_y > 80) {
+    adj = "Pretty good!";
+  } else if (last_y > 60) {
+    adj = "Decent.";
+  } else if (last_y > 30) {
+    adj = "Pretty bad.";
+  } else {
+    adj = "Terrible!";
+  }
+  document.getElementById("para").innerHTML = "The last download speed was " + last_y + ". " + adj;
 };
 
 function makeplot() {
