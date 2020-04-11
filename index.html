@@ -16,7 +16,7 @@
 <div id="myDiv" style="width:100%;height:100%;"></div>
 <p id="para"></p>
 <script>
-function updatePara(last_y){
+function updatePara(last_x, last_y){
   var adj;
   if(last_y > 80) {
     adj = "Pretty good!";
@@ -27,7 +27,7 @@ function updatePara(last_y){
   } else {
     adj = "Terrible!";
   }
-  document.getElementById("para").innerHTML = "The last download speed was " + last_y + ". " + adj;
+  document.getElementById("para").innerHTML = "Latest download speed, at " + last_x + ", was " + last_y + ". " + adj;
 };
 
 function makeplot() {
@@ -59,7 +59,7 @@ function processData(allRows) {
       avg.push(NaN);
     }
   }
-  updatePara(y[y.length-1])
+  updatePara(x[x.length-1], y[y.length-1])
   makePlotly(x, y, avg);
 }
 
